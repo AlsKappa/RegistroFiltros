@@ -12,7 +12,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.4/jspdf.plugin.autotable.min.js"></script>
 </head>
 
 <body>
@@ -20,8 +20,8 @@
 <div class="container">
 
     <header>
-        <h1>HOJA DE ENTREGA</h1>
-        <p>Control de Ecofiltros</p>
+        <h1>HOJA DE ENTREGA DE ECOFILTROS</h1>
+        <p>Registro mediante código de barras</p>
     </header>
 
     <section class="card">
@@ -31,7 +31,7 @@
         <div class="form-grid">
 
             <div>
-                <label>Destino</label>
+                <label for="destino">Destino</label>
 
                 <select id="destino">
                     <option>Sucursal</option>
@@ -40,16 +40,16 @@
             </div>
 
             <div>
-                <label>Cliente</label>
+                <label for="cliente">Cliente</label>
 
-                 <select id="destino">
-                    <option>Sucurs222al</option>
-                    <option selected>Cliente</option>
-                </select>
+                <input
+                    type="text"
+                    id="cliente"
+                    placeholder="Nombre del cliente">
             </div>
 
             <div>
-                <label>Fecha</label>
+                <label for="fechaEntrega">Fecha</label>
 
                 <input
                     type="date"
@@ -65,7 +65,7 @@
 
         <h2>Escáner</h2>
 
-        <button id="btnEscanear">
+        <button id="btnEscanear" type="button">
             Escanear Filtro
         </button>
 
@@ -74,30 +74,23 @@
         <div id="mensaje"></div>
 
         <div class="ultima-lectura">
-            <h3>Último Código</h3>
-
-            <span id="codigoActual">
-                Sin lectura
-            </span>
+            <h3>Último código leído</h3>
+            <span id="codigoActual">Sin lectura</span>
         </div>
 
         <div class="registro-form">
 
-            <label>Token</label>
-
+            <label for="token">Token</label>
             <input
                 type="text"
-                id="token"
-                placeholder="Ingrese token">
+                id="token">
 
-            <label>Observación</label>
-
+            <label for="observacion">Observación</label>
             <input
                 type="text"
-                id="observacion"
-                placeholder="Ingrese observación">
+                id="observacion">
 
-            <button id="guardarFiltro">
+            <button id="guardarFiltro" type="button">
                 Guardar Filtro
             </button>
 
@@ -121,14 +114,14 @@
 
             <thead>
 
-            <tr>
-                <th>#</th>
-                <th>Código</th>
-                <th>Token</th>
-                <th>Observación</th>
-                <th>Fecha</th>
-                <th></th>
-            </tr>
+                <tr>
+                    <th>#</th>
+                    <th>Código</th>
+                    <th>Token</th>
+                    <th>Observación</th>
+                    <th>Fecha</th>
+                    <th>Acción</th>
+                </tr>
 
             </thead>
 
@@ -140,11 +133,11 @@
 
     <section class="card acciones">
 
-        <button id="btnGenerarPDF">
+        <button id="btnGenerarPDF" type="button">
             Generar PDF
         </button>
 
-        <button id="btnNuevaEntrega">
+        <button id="btnNuevaEntrega" type="button">
             Nueva Entrega
         </button>
 

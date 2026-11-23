@@ -6,7 +6,7 @@
 
 body{
     background:#f5f6fa;
-    font-family:Segoe UI, sans-serif;
+    font-family:"Segoe UI",sans-serif;
     padding:20px;
 }
 
@@ -21,28 +21,27 @@ header{
 
 header h1{
     color:#1e3a8a;
+    margin-bottom:5px;
 }
 
 .card{
-    background:white;
-    margin-bottom:20px;
-    padding:20px;
+    background:#fff;
     border-radius:12px;
+    padding:20px;
+    margin-bottom:20px;
     box-shadow:0 2px 12px rgba(0,0,0,.08);
 }
 
 .form-grid{
     display:grid;
-    grid-template-columns:
-    repeat(auto-fit,minmax(250px,1fr));
-
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
     gap:15px;
 }
 
 label{
     display:block;
+    margin-bottom:6px;
     font-weight:600;
-    margin-bottom:5px;
 }
 
 input,
@@ -54,7 +53,6 @@ select{
 }
 
 button{
-
     background:#1e40af;
     color:white;
     border:none;
@@ -72,15 +70,10 @@ button:hover{
 }
 
 #mensaje{
-
     display:none;
-
     margin-top:15px;
-
     padding:12px;
-
-    border-radius:6px;
-
+    border-radius:8px;
     font-weight:bold;
 }
 
@@ -95,44 +88,34 @@ button:hover{
 }
 
 .ultima-lectura{
-
     margin-top:15px;
-
     padding:15px;
-
     background:#eef4ff;
-
-    border-left:4px solid #2563eb;
+    border-left:5px solid #2563eb;
 }
 
 #codigoActual{
     display:block;
-    font-size:1.2rem;
+    margin-top:8px;
+    font-size:1.1rem;
     font-weight:bold;
 }
 
 .registro-form{
-
     margin-top:20px;
-
     display:grid;
-
     gap:10px;
 }
 
 .table-header{
-
     display:flex;
-
     justify-content:space-between;
-
+    align-items:center;
     margin-bottom:15px;
 }
 
 table{
-
     width:100%;
-
     border-collapse:collapse;
 }
 
@@ -141,8 +124,8 @@ th{
     color:white;
 }
 
-td,
-th{
+th,
+td{
     border:1px solid #ddd;
     padding:10px;
 }
@@ -162,4 +145,5 @@ tr:nth-child(even){
 .acciones{
     display:flex;
     gap:10px;
+    flex-wrap:wrap;
 }

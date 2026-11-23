@@ -2,20 +2,20 @@ const registros = [];
 
 let codigoPendiente = "";
 
-let html5QrCode = null;
-
 let scannerActivo = false;
 
-document
-.getElementById("fechaEntrega")
-.value =
-new Date()
-.toISOString()
-.split("T")[0];
+let html5QrCode = null;
 
-cargarDatos();
+document.addEventListener("DOMContentLoaded", () => {
 
-function mostrarMensaje(texto,tipo){
+    document.getElementById("fechaEntrega").value =
+        new Date().toISOString().split("T")[0];
+
+    cargarDatos();
+
+});
+
+function mostrarMensaje(texto, tipo){
 
     const mensaje =
         document.getElementById("mensaje");
@@ -26,9 +26,9 @@ function mostrarMensaje(texto,tipo){
 
     mensaje.style.display = "block";
 
-    setTimeout(()=>{
-        mensaje.style.display="none";
-    },3000);
+    setTimeout(() => {
+        mensaje.style.display = "none";
+    }, 3000);
 }
 
 function guardarDatos(){
@@ -42,17 +42,12 @@ function guardarDatos(){
 function cargarDatos(){
 
     const datos =
-        localStorage.getItem(
-            "ecofiltros_actual"
-        );
+        localStorage.getItem("ecofiltros_actual");
 
-    if(!datos)return;
+    if(!datos) return;
 
-    const recuperados =
-        JSON.parse(datos);
-
-    recuperados.forEach(
-        r => registros.push(r)
+    registros.push(
+        ...JSON.parse(datos)
     );
 
     recargarTabla();
@@ -60,48 +55,37 @@ function cargarDatos(){
 
 function actualizarContador(){
 
-    document
-    .getElementById("totalRegistros")
-    .textContent =
+    document.getElementById(
+        "totalRegistros"
+    ).textContent =
     `Total: ${registros.length}`;
 }
 
-function mostrarRegistro(r,index){
+function mostrarRegistro(registro, index){
 
-    const fila=`
+    const fila = `
     <tr>
-
         <td>${index}</td>
-
-        <td>${r.codigo}</td>
-
-        <td>${r.token}</td>
-
-        <td>${r.observacion}</td>
-
-        <td>${r.fecha}</td>
-
+        <td>${registro.codigo}</td>
+        <td>${registro.token}</td>
+        <td>${registro.observacion}</td>
+        <td>${registro.fecha}</td>
         <td>
-
             <button
-            class="delete-btn"
-            onclick="eliminarRegistro('${r.codigo}')">
-
-            Eliminar
-
+                class="delete-btn"
+                onclick="eliminarRegistro('${registro.codigo}')">
+                Eliminar
             </button>
-
         </td>
-
     </tr>
     `;
 
     document
-    .getElementById("tablaRegistros")
-    .insertAdjacentHTML(
-        "beforeend",
-        fila
-    );
+        .getElementById("tablaRegistros")
+        .insertAdjacentHTML(
+            "beforeend",
+            fila
+        );
 }
 
 function recargarTabla(){
@@ -111,14 +95,15 @@ function recargarTabla(){
             "tablaRegistros"
         );
 
-    tabla.innerHTML="";
+    tabla.innerHTML = "";
 
     registros.forEach(
-        (r,i)=>
-        mostrarRegistro(
-            r,
-            i+1
-        )
+        (registro, index) => {
+            mostrarRegistro(
+                registro,
+                index + 1
+            );
+        }
     );
 
     actualizarContador();
@@ -131,31 +116,25 @@ function eliminarRegistro(codigo){
             r => r.codigo === codigo
         );
 
-    if(indice > -1){
+    if(indice === -1) return;
 
-        registros.splice(
-            indice,
-            1
-        );
+    registros.splice(indice,1);
 
-        guardarDatos();
+    guardarDatos();
 
-        recargarTabla();
-    }
+    recargarTabla();
 }
 
 async function iniciarScanner(){
 
-    if(scannerActivo){
-        return;
-    }
-
-    html5QrCode =
-    new Html5Qrcode("reader");
-
-    scannerActivo = true;
+    if(scannerActivo) return;
 
     try{
+
+        html5QrCode =
+            new Html5Qrcode("reader");
+
+        scannerActivo = true;
 
         await html5QrCode.start(
             {
@@ -169,34 +148,32 @@ async function iniciarScanner(){
 
                 await html5QrCode.stop();
 
-                scannerActivo=false;
+                scannerActivo = false;
 
                 codigoPendiente =
                     decodedText;
 
-                document
-                .getElementById(
+                document.getElementById(
                     "codigoActual"
-                )
-                .textContent =
+                ).textContent =
                 decodedText;
 
                 mostrarMensaje(
                     "Código leído correctamente",
                     "success"
                 );
+
             }
         );
 
-    }
-    catch(error){
+    }catch(error){
 
         console.error(error);
 
-        scannerActivo=false;
+        scannerActivo = false;
 
         mostrarMensaje(
-            "No se pudo iniciar la cámara",
+            "No fue posible abrir la cámara",
             "error"
         );
     }
@@ -218,21 +195,19 @@ document
         if(!codigoPendiente){
 
             mostrarMensaje(
-                "Escanee un filtro primero",
+                "Primero escanee un filtro",
                 "error"
             );
 
             return;
         }
 
-        const existe =
+        const duplicado =
             registros.some(
-                r =>
-                r.codigo ===
-                codigoPendiente
+                r => r.codigo === codigoPendiente
             );
 
-        if(existe){
+        if(duplicado){
 
             mostrarMensaje(
                 "Código ya registrado",
@@ -250,17 +225,19 @@ document
             token:
                 document
                 .getElementById("token")
-                .value,
+                .value
+                .trim(),
 
             observacion:
                 document
-                .getElementById(
-                    "observacion"
-                ).value,
+                .getElementById("observacion")
+                .value
+                .trim(),
 
             fecha:
                 new Date()
                 .toLocaleString()
+
         };
 
         registros.push(registro);
@@ -269,23 +246,23 @@ document
 
         recargarTabla();
 
-        document
-        .getElementById("token")
-        .value="";
+        document.getElementById(
+            "token"
+        ).value = "";
 
-        document
-        .getElementById("observacion")
-        .value="";
+        document.getElementById(
+            "observacion"
+        ).value = "";
 
-        codigoPendiente="";
+        codigoPendiente = "";
 
-        document
-        .getElementById("codigoActual")
-        .textContent =
+        document.getElementById(
+            "codigoActual"
+        ).textContent =
         "Sin lectura";
 
         mostrarMensaje(
-            "Filtro guardado",
+            "Filtro guardado correctamente",
             "success"
         );
     }
@@ -294,12 +271,14 @@ document
 document
 .getElementById("btnNuevaEntrega")
 .addEventListener(
-"click",
-()=>{
+    "click",
+    ()=>{
 
-    if(confirm(
-        "¿Limpiar todos los registros?"
-    )){
+        if(!confirm(
+            "¿Desea limpiar la entrega actual?"
+        )){
+            return;
+        }
 
         registros.length = 0;
 
@@ -308,86 +287,113 @@ document
         );
 
         recargarTabla();
+
+        mostrarMensaje(
+            "Entrega reiniciada",
+            "success"
+        );
     }
-});
+);
 
 document
 .getElementById("btnGenerarPDF")
 .addEventListener(
-"click",
-()=>{
+    "click",
+    ()=>{
 
-    const { jsPDF } =
-        window.jspdf;
+        try{
 
-    const doc =
-        new jsPDF();
+            if(registros.length === 0){
 
-    doc.setFontSize(18);
+                alert(
+                    "No existen registros para exportar."
+                );
 
-    doc.text(
-        "HOJA DE ENTREGA",
-        70,
-        15
-    );
+                return;
+            }
 
-    doc.setFontSize(10);
+            const { jsPDF } =
+                window.jspdf;
 
-    doc.text(
-        `Cliente: ${
-            document.getElementById(
-                "cliente"
-            ).value
-        }`,
-        15,
-        30
-    );
+            const doc =
+                new jsPDF();
 
-    doc.text(
-        `Fecha: ${
-            document.getElementById(
-                "fechaEntrega"
-            ).value
-        }`,
-        150,
-        30
-    );
+            const cliente =
+                document.getElementById(
+                    "cliente"
+                ).value || "No especificado";
 
-    doc.text(
-        `Destino: ${
-            document.getElementById(
-                "destino"
-            ).value
-        }`,
-        15,
-        40
-    );
+            const destino =
+                document.getElementById(
+                    "destino"
+                ).value;
 
-    doc.autoTable({
+            const fecha =
+                document.getElementById(
+                    "fechaEntrega"
+                ).value;
 
-        startY:50,
+            doc.setFontSize(18);
 
-        head:[[
-            "No.",
-            "Código",
-            "Token",
-            "Observación"
-        ]],
+            doc.text(
+                "HOJA DE ENTREGA",
+                70,
+                15
+            );
 
-        body:
+            doc.setFontSize(11);
 
-        registros.map(
-            (r,i)=>[
-                i+1,
-                r.codigo,
-                r.token,
-                r.observacion
-            ]
-        )
+            doc.text(
+                `Cliente: ${cliente}`,
+                15,
+                30
+            );
 
-    });
+            doc.text(
+                `Destino: ${destino}`,
+                15,
+                38
+            );
 
-    doc.save(
-        "Hoja_Entrega.pdf"
-    );
-});
+            doc.text(
+                `Fecha: ${fecha}`,
+                140,
+                30
+            );
+
+            doc.autoTable({
+
+                startY: 50,
+
+                head:[[
+                    "#",
+                    "Código",
+                    "Token",
+                    "Observación"
+                ]],
+
+                body:
+                registros.map(
+                    (r,i)=>[
+                        i+1,
+                        r.codigo,
+                        r.token,
+                        r.observacion
+                    ]
+                )
+            });
+
+            doc.save(
+                `Entrega_${fecha}.pdf`
+            );
+
+        }catch(error){
+
+            console.error(error);
+
+            alert(
+                "Error al generar PDF. Revise la consola del navegador."
+            );
+        }
+    }
+);
