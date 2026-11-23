@@ -4,114 +4,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Registro de Ecofiltros</title>
+    <title>Control de Entrega de Ecofiltros</title>
 
     <link rel="stylesheet" href="css/styles.css">
 
     <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <header>
-            <h1>Registro de Entrega de Ecofiltros</h1>
-            <p>Escanee los códigos de barras para registrar la entrega.</p>
-        </header>
+    <header>
+        <h1>HOJA DE ENTREGA</h1>
+        <p>Control de Ecofiltros</p>
+    </header>
 
-        <section class="card">
+    <section class="card">
 
-            <h2>Información General</h2>
+        <h2>Datos Generales</h2>
 
-            <div class="form-grid">
+        <div class="form-grid">
 
-                <div>
-                    <label>Cliente</label>
+            <div>
+                <label>Destino</label>
 
-                    <select id="cliente">
-                        <option value="">Seleccione</option>
-                        <option>Fundación Génesis</option>
-                        <option>Municipalidad</option>
-                        <option>Proyecto Escolar</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label>Proyecto</label>
-
-                    <select id="proyecto">
-                        <option value="">Seleccione</option>
-                        <option>Entrega Comunitaria</option>
-                        <option>Escuelas</option>
-                        <option>Donación</option>
-                    </select>
-                </div>
-
+                <select id="destino">
+                    <option>Sucursal</option>
+                    <option selected>Cliente</option>
+                </select>
             </div>
 
-        </section>
+            <div>
+                <label>Cliente</label>
 
-        <section class="card">
-
-            <h2>Escáner</h2>
-
-            <div id="reader"></div>
-
-            <div class="ultima-lectura">
-
-                <h3>Último código leído</h3>
-
-                <span id="codigoActual">
-                    Sin registros
-                </span>
-
+                <input
+                    type="text"
+                    id="cliente"
+                    placeholder="Nombre del cliente">
             </div>
 
-        </section>
+            <div>
+                <label>Fecha</label>
 
-        <section class="card">
-
-            <div class="table-header">
-
-                <h2>Ecofiltros Registrados</h2>
-
-                <span id="totalRegistros">
-                    Total: 0
-                </span>
-
+                <input
+                    type="date"
+                    id="fechaEntrega"
+                    readonly>
             </div>
 
-            <table>
+        </div>
 
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Código</th>
-                        <th>Fecha</th>
-                        <th>Acción</th>
-                    </tr>
-                </thead>
+    </section>
 
-                <tbody id="tablaRegistros"></tbody>
+    <section class="card">
 
-            </table>
+        <h2>Escáner</h2>
 
-        </section>
+        <button id="btnEscanear">
+            Escanear Filtro
+        </button>
 
-        <section class="card">
+        <div id="reader"></div>
 
-            <button id="btnExportar">
-                Preparar Entrega
+        <div id="mensaje"></div>
+
+        <div class="ultima-lectura">
+            <h3>Último Código</h3>
+
+            <span id="codigoActual">
+                Sin lectura
+            </span>
+        </div>
+
+        <div class="registro-form">
+
+            <label>Token</label>
+
+            <input
+                type="text"
+                id="token"
+                placeholder="Ingrese token">
+
+            <label>Observación</label>
+
+            <input
+                type="text"
+                id="observacion"
+                placeholder="Ingrese observación">
+
+            <button id="guardarFiltro">
+                Guardar Filtro
             </button>
 
-        </section>
+        </div>
 
-    </div>
+    </section>
 
-    <script src="js/app.js"></script>
+    <section class="card">
+
+        <div class="table-header">
+
+            <h2>Filtros Registrados</h2>
+
+            <span id="totalRegistros">
+                Total: 0
+            </span>
+
+        </div>
+
+        <table>
+
+            <thead>
+
+            <tr>
+                <th>#</th>
+                <th>Código</th>
+                <th>Token</th>
+                <th>Observación</th>
+                <th>Fecha</th>
+                <th></th>
+            </tr>
+
+            </thead>
+
+            <tbody id="tablaRegistros"></tbody>
+
+        </table>
+
+    </section>
+
+    <section class="card acciones">
+
+        <button id="btnGenerarPDF">
+            Generar PDF
+        </button>
+
+        <button id="btnNuevaEntrega">
+            Nueva Entrega
+        </button>
+
+    </section>
+
+</div>
+
+<script src="js/app.js"></script>
 
 </body>
-
 </html>
